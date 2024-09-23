@@ -47,7 +47,8 @@ FROM debian:stable-slim AS test_runner
 RUN dpkg --add-architecture i386 \
     && apt-get update \
     && apt-get install -y --install-recommends \
-    wine winbind rsync
+    wine winbind rsync \
+    && rm -rf /var/lib/apt/lists/*
 
 ENV WINEDEBUG=-all
 ENV WINEDLLOVERRIDES=mshtml=
