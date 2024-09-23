@@ -36,10 +36,22 @@ RUN cp ${APPDIR}/${MOD}/steam_appid.txt ${APPDIR} \
 
 # Remove unnecessary files
 RUN rm -rf linux64 .DepotDownloader utils/ \
-    && find . \( \
+    && find . \
+    \( \
         -name '*.so'  -o \
+        -name '*64.dll'  -o \
         -name '*.dylib' \
     \) -exec rm -rf {} \;
+
+# Remove *.bsp
+# RUN find . -name '*.bsp' \
+#     \( \
+#         -not -name 'rehlds_*' \
+#         -not -name 'regamedll_*' \
+#         -not -name 'de_dust2*' \
+#         -not -name 'crossfire*' \
+#     \) \
+#     -delete
 
 
 FROM debian:stable-slim AS test_runner
