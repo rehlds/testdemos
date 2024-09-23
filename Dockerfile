@@ -46,14 +46,13 @@ FROM debian:stable-slim AS test_runner
 
 RUN dpkg --add-architecture i386 \
     && apt-get update \
-    && apt-get install -y --install-recommends \
-    wine winbind rsync \
+    && apt-get install -y \
+        wine32 \
+        rsync \
     && rm -rf /var/lib/apt/lists/*
 
 ENV WINEDEBUG=-all
 ENV WINEDLLOVERRIDES=mshtml=
-
-RUN wineboot
 
 COPY --from=download_hlds_windows /opt/hlds /opt/HLDS
 
