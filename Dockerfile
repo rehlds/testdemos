@@ -1,4 +1,4 @@
-FROM debian:12-slim AS download_hlds_windows
+FROM debian:stable-slim AS download_hlds_windows
 
 LABEL creator="Sergey Shorokhov <wopox1337@ya.ru>"
 
@@ -42,26 +42,23 @@ RUN rm -rf linux64 .DepotDownloader utils/ \
     \) -exec rm -rf {} \;
 
 
-FROM debian:12-slim AS test_runner
+FROM debian:stable-slim AS test_runner
 
 RUN dpkg --add-architecture i386 \
     && apt-get update \
     && apt-get install -y --install-recommends \
-    wine winbind
+    wine winbind rsync
 
 ENV WINEDEBUG=-all
 ENV WINEDLLOVERRIDES=mshtml=
 
 RUN wineboot
 
-WORKDIR /opt/hlds
 COPY --from=download_hlds_windows /opt/hlds /opt/hlds
 
+WORKDIR /opt/hlds
 # Add test depend files
-# COPY testdemos_files .
-# RUN cp -r deps/rehlds/* . \
-#     && cp -r deps/regamedll/* .
+COPY testdemos_files .
 
-# CMD wine hlds.exe --rehlds-enable-all-hooks --rehlds-test-play testdemos/cstrike-basic-1.bin -game cstrike -console -port 27039 +map regamedll_test_map_v5
-
-# CMD ./test.sh
+# CMD [ "./test.sh" ]
+# CMD wine hlds.exe --rehlds-enable-all-hooks --rehlds-test-play "testdemos/cstrike-basic-1.bin" -game cstrike -console -port 27039 +map regamedll_test_map_v5

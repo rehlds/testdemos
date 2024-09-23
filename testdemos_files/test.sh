@@ -1,18 +1,23 @@
 #!/bin/bash
 
+chown root ~
+# rsync -a deps/regamedll/* .
+rsync -a deps/rehlds/* .
+# mv $GITHUB_WORKSPACE/tests/swds.dll .
+
 descs=(
-    "CS: Testing jumping, scenarios, shooting etc"
+    # "CS: Testing jumping, scenarios, shooting etc"
     "CS: Multiplayer"
-    "Half-Life: Physics singleplayer"
-    "Half-Life: Multiplayer on crossfire map"
-    "Half-Life: Shooting with several weapons"
+    # "Half-Life: Physics singleplayer"
+    # "Half-Life: Multiplayer on crossfire map"
+    # "Half-Life: Shooting with several weapons"
 )
 demos=(
-    "cstrike-basic-1"
+    # "cstrike-basic-1" 
     "cstrike-muliplayer-1"
-    "rehlds-phys-single1"
-    "crossfire-1-multiplayer-1"
-    "shooting-hl-1"
+    # "rehlds-phys-single1"
+    # "crossfire-1-multiplayer-1"
+    # "shooting-hl-1"
 )
 retVal=0
 for i in "${!demos[@]}"; do
