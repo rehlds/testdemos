@@ -54,9 +54,9 @@ ENV WINEDLLOVERRIDES=mshtml=
 
 RUN wineboot
 
-COPY --from=download_hlds_windows /opt/hlds /opt/hlds
+COPY --from=download_hlds_windows /opt/hlds /opt/HLDS
 
-WORKDIR /opt/hlds
+WORKDIR /opt/HLDS
 # Add test depend files
 COPY testdemos_files .
 
