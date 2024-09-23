@@ -1,0 +1,1 @@
+-console -port 27030 -maxplayers 32 +map crossfire
