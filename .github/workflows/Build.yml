@@ -43,20 +43,24 @@ jobs:
         password: ${{ secrets.DOCKER_PERSONAL_ACCESS_TOKEN }}
 
     - name: Build and push Docker image
-      uses: docker/build-push-action@v6.7.0
+      uses: Wandalen/wretry.action@v3.5.0
       env:
-        OWNER: ${{ vars.DOCKER_USERNAME }}
-        REPO: ${{ vars.DOCKER_REPOSITORY }}
-        TAG: ${{ matrix.branch }}
+          OWNER: ${{ vars.DOCKER_USERNAME }}
+          REPO: ${{ vars.DOCKER_REPOSITORY }}
+          TAG: ${{ matrix.branch }}
       with:
-        context: .
-        file: ./Dockerfile
-        push: ${{ env.needToPush }}
-        tags: |
-          ${{ env.OWNER }}/${{ env.REPO }}:${{ env.TAG }}
-          ${{ env.TAG == 'steam_legacy' && format('{0}/{1}:latest', env.OWNER, env.REPO) || null}}
-        build-args: |
-          APPBRANCH=${{ matrix.branch }}
-          MOD=${{ matrix.mod }}
-        cache-from: type=gha,scope=build-${{ matrix.mod }}-${{ matrix.branch }}
-        cache-to: type=gha,mode=max,scope=build-${{ matrix.mod }}-${{ matrix.branch }}
+        attempt_limit: 3
+        attempt_delay: 1000
+        action: docker/build-push-action@v6.7.0
+        with: |
+          context: .
+          file: ./Dockerfile
+          push: ${{ env.needToPush }}
+          tags: |
+            ${{ env.OWNER }}/${{ env.REPO }}:${{ env.TAG }}
+            ${{ env.TAG == 'steam_legacy' && format('{0}/{1}:latest', env.OWNER, env.REPO) || null}}
+          build-args: |
+            APPBRANCH=${{ matrix.branch }}
+            MOD=${{ matrix.mod }}
+          cache-from: type=gha,scope=build-${{ matrix.mod }}-${{ matrix.branch }}
+          cache-to: type=gha,mode=max,scope=build-${{ matrix.mod }}-${{ matrix.branch }}
