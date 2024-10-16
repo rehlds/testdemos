@@ -70,7 +70,4 @@ COPY --from=download_hlds_windows /opt/hlds /opt/HLDS
 
 WORKDIR /opt/HLDS
 # Add test depend files
-COPY testdemos_files .
-
-# CMD [ "./test.sh" ]
-# CMD wine hlds.exe --rehlds-enable-all-hooks --rehlds-test-play "testdemos/cstrike-basic-1.bin" -game cstrike -console -port 27039 +map regamedll_test_map_v5
+COPY --chmod=755 testdemos_files .
