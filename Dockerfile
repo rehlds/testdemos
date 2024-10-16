@@ -70,4 +70,4 @@ COPY --from=download_hlds_windows /opt/hlds /opt/HLDS
 
 WORKDIR /opt/HLDS
 # Add test depend files
-COPY --chmod=x testdemos_files .
+COPY --chmod=755 testdemos_files .
