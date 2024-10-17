@@ -1,7 +1,4 @@
-# rsync -a deps/rehlds/* .
-
-# demo="cstrike-muliplayer-1"
-# desc="CS: Multiplayer"
+#!/bin/bash
 
 params=$(cat "testdemos/${demo}.params")
                     

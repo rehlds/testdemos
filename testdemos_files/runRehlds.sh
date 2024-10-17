@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo " - Testing rehlds -"
+echo " - Testing ReHLDS - "
 rsync -a deps/rehlds/* .
 
 demo=cstrike-muliplayer-1       desc="CS: Multiplayer"                          ./runTest.sh
