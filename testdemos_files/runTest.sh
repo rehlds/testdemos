@@ -1,33 +1,44 @@
-# rsync -a deps/rehlds/* .
+#!/bin/bash
 
-# demo="cstrike-muliplayer-1"
-# desc="CS: Multiplayer"
+CYAN="\e[1;36m"
+YELLOW="\e[0;33m"
+RED="\e[1;31m"
+BOLD_RED="\e[30;41m"
+BOLD_YELLOW="\e[30;43m"
+RESET="\e[0m"
+
+ERROR_FILE="rehlds_demo_error.txt"
+RESULT_FILE="result.log"
 
 params=$(cat "testdemos/${demo}.params")
-                    
-echo -e "\e[1;36m${desc} testing...\e[0m"
-echo -e "    - \e[0;33mParameters: $params\e[0m"
+
+printf "${CYAN}%s testing...${RESET}\n" "${desc}"
+printf "    - ${YELLOW}Parameters: %s${RESET}\n" "$params"
 
 retVal=0
-wine hlds.exe --rehlds-enable-all-hooks --rehlds-test-play "testdemos/${demo}.bin" $params &> result.log || retVal=$?
-if [ $retVal -ne 777 ] && [ $retVal -ne 9 ]; then
-    echo -e "      🔸  🔸  🔸  🔸  🔸  🔸  🔸  🔸  🔸  🔸"
-    
-    if [ -f rehlds_demo_error.txt ]; then
-        while read line; do
-            echo -e "      \e[1;31m$line";
-        done < rehlds_demo_error.txt
-    else
-        echo -e "      \e[1;33mrehlds_demo_error.txt not found, dumping result.log:\e[0m"
-        cat result.log
-    fi
-    echo -e "      \e[30;41mExit code: $retVal\e[0m"
-    echo -e "\e[1;36m${desc} testing...\e[1;31m Failed ❌\e[0m"
-    exit 6 # Test demo failed
-else
-    while read line; do
-        echo -e "      \e[0;33m$line"
-    done <<< $(cat result.log | sed '/wine:/d;/./,$!d')
-    echo -e "      \e[30;43mExit code: $retVal\e[0m"
-    echo -e "\e[1;36m${desc} testing...\e[1;32m Succeed ✔\e[0m"
+wine hlds.exe --rehlds-enable-all-hooks --rehlds-test-play "testdemos/${demo}.bin" $params &> "$RESULT_FILE" || retVal=$?
+
+if [ $retVal -eq 777 ] || [ $retVal -eq 9 ]; then
+    while IFS= read -r line; do
+        printf "      ${YELLOW}%s${RESET}\n" "$line"
+    done <<< $(sed '/wine:/d;/./,$!d' "$RESULT_FILE")
+
+    printf "      ${BOLD_YELLOW}Exit code: %d${RESET}\n" "$retVal"
+    printf "${CYAN}%s testing...${YELLOW} Succeed ✔${RESET}\n" "$desc"
+    exit 0
 fi
+
+printf "      🔸  🔸  🔸  🔸  🔸  🔸  🔸  🔸  🔸  🔸\n"
+
+if [ -f "$ERROR_FILE" ]; then
+    while IFS= read -r line; do
+        printf "      ${RED}%s${RESET}\n" "$line"
+    done < "$ERROR_FILE"
+else
+    printf "      ${YELLOW}rehlds_demo_error.txt not found, dumping result.log:${RESET}\n"
+    cat "$RESULT_FILE"
+fi
+
+printf "      ${BOLD_RED}Exit code: %d${RESET}\n" "$retVal"
+printf "${CYAN}%s testing...${RED} Failed ❌${RESET}\n" "$desc"
+exit 1
