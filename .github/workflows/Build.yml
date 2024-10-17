@@ -43,6 +43,7 @@ jobs:
         run: docker build -t $imageName .
 
       - name: Prepare
+        working-directory: ./testdemos_files
         run: rsync -a deps/${{ matrix.test.type }}/* .
 
       - name: Run test
