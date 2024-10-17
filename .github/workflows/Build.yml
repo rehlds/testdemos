@@ -38,10 +38,9 @@ jobs:
         imageName: testdemos_local
     steps:
       - uses: actions/checkout@v4
-  
-      - run: ls -la && echo $imageName
+
       - name: Build container
-        run: docker build -t $imageName ./Dockerfile
+        run: docker build -t $imageName .
 
       - name: Prepare
         run: rsync -a deps/${{ matrix.test.type }}/* .
