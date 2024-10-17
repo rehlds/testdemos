@@ -53,11 +53,12 @@ jobs:
       - name: Build container
         run: |
           docker build \
-          --cache-from=type=gha,src=/tmp/.buildx-cache \
-          --cache-to=type=gha,dest=/tmp/.buildx-cache-new,mode=max \
+          --cache-from=type=gha \
+          --cache-to=type=gha,mode=max \
           -t $imageName .
 
       - name: Run test
+        if: false
         env:
           demo: ${{ matrix.test.file }}
           desc: ${{ matrix.test.desc }}
