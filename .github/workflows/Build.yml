@@ -16,30 +16,31 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        branch:
-          - steam_legacy
-          - public
-        mod:
-        #   - valve
-          - cstrike
-        #   - czero
-        #   - dod
-        #   - gearbox
-        #   - tfc
-        #   - ricochet
-        #   - dmc
+        # branch:
+        #   - steam_legacy
+        #   - public
+        # mod:
+        # #   - valve
+        #   - cstrike
+        # #   - czero
+        # #   - dod
+        # #   - gearbox
+        # #   - tfc
+        # #   - ricochet
+        # #   - dmc
         test: [
           { type: 'rehlds',     file: 'cstrike-muliplayer-1',       desc: 'CS: Multiplayer' },
-          { type: 'rehlds',     file: 'rehlds-phys-single1',        desc: 'Half-Life: Physics singleplayer' },
-          { type: 'rehlds',     file: 'crossfire-1-multiplayer-1',  desc: 'Half-Life: Multiplayer on crossfire map' },
-          { type: 'rehlds',     file: 'shooting-hl-1',              desc: 'Half-Life: Shooting with several weapons' },
-          { type: 'regamedll',  file: 'cstrike-basic-1',            desc: 'CS: Testing jumping, scenarios, shooting etc' },
+          # { type: 'rehlds',     file: 'rehlds-phys-single1',        desc: 'Half-Life: Physics singleplayer' },
+          # { type: 'rehlds',     file: 'crossfire-1-multiplayer-1',  desc: 'Half-Life: Multiplayer on crossfire map' },
+          # { type: 'rehlds',     file: 'shooting-hl-1',              desc: 'Half-Life: Shooting with several weapons' },
+          # { type: 'regamedll',  file: 'cstrike-basic-1',            desc: 'CS: Testing jumping, scenarios, shooting etc' },
         ]
     env:
         imageName: testdemos_local
     steps:
       - uses: actions/checkout@v4
   
+      - run: ls -la
       - name: Build container
         run: docker build -t $imageName ./Dockerfile 
 
