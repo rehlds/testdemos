@@ -32,7 +32,7 @@ jobs:
       needToPush: ${{ github.ref == 'refs/heads/master' }}
 
     steps:
-    - uses: actions/checkout@v4.2.0
+    - uses: actions/checkout@v4.2.1
     - uses: docker/setup-buildx-action@v3.7.0
 
     - name: Log in to Docker Hub
