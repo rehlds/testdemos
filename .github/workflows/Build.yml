@@ -39,12 +39,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Build container
-        run: docker build -t $imageName .
-
+      - uses: actions/cache@v4
+        with:
+          path: .
+          key: ${{ matrix.test.type }}
+        
       - name: Prepare
         working-directory: ./testdemos_files
         run: rsync -a deps/${{ matrix.test.type }}/* .
+
+      - name: Build container
+        run: docker build -t $imageName .
 
       - name: Run test
         env:
@@ -52,9 +57,9 @@ jobs:
           desc: ${{ matrix.test.desc }}
         run: |
           docker run \
-            -t $imageName \
             --env demo \
             --env desc \
+            -t $imageName \
             ./runTest.sh
 
   build:
