@@ -12,7 +12,6 @@ on:
 jobs:
   playtest:
     runs-on: ubuntu-latest
-    container: rehldsorg/testdemos:latest
     strategy:
       fail-fast: false
       matrix:
@@ -40,9 +39,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
   
-      - run: ls -la
+      - run: ls -la && echo $imageName
       - name: Build container
-        run: docker build -t $imageName ./Dockerfile 
+        run: docker build -t $imageName ./Dockerfile
 
       - name: Prepare
         run: rsync -a deps/${{ matrix.test.type }}/* .
