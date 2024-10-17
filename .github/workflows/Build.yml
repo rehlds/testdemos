@@ -53,8 +53,8 @@ jobs:
       - name: Build container
         run: |
           docker build \
-          --cache-from=type=local,src=/tmp/.buildx-cache \
-          --cache-to=type=local,dest=/tmp/.buildx-cache-new,mode=max \
+          --cache-from=type=gha,src=/tmp/.buildx-cache \
+          --cache-to=type=gha,dest=/tmp/.buildx-cache-new,mode=max \
           -t $imageName .
 
       - name: Run test
