@@ -10,6 +10,47 @@ on:
   workflow_dispatch:
 
 jobs:
+  playtest:
+    runs-on: ubuntu-latest
+    container: rehldsorg/testdemos:latest
+    strategy:
+      fail-fast: false
+      matrix:
+        branch:
+          - steam_legacy
+          - public
+        mod:
+        #   - valve
+          - cstrike
+        #   - czero
+        #   - dod
+        #   - gearbox
+        #   - tfc
+        #   - ricochet
+        #   - dmc
+        test: [
+          { type: 'rehlds',     file: 'cstrike-muliplayer-1',       desc: 'CS: Multiplayer' },
+          { type: 'rehlds',     file: 'rehlds-phys-single1',        desc: 'Half-Life: Physics singleplayer' },
+          { type: 'rehlds',     file: 'crossfire-1-multiplayer-1',  desc: 'Half-Life: Multiplayer on crossfire map' },
+          { type: 'rehlds',     file: 'shooting-hl-1',              desc: 'Half-Life: Shooting with several weapons' },
+          { type: 'regamedll',  file: 'cstrike-basic-1',            desc: 'CS: Testing jumping, scenarios, shooting etc' },
+        ]
+    env:
+        imageName: testdemos_local
+    steps:
+      - uses: actions/checkout@v4
+  
+      - name: Build container
+        run: docker build -t $imageName ./Dockerfile 
+
+      - name: Prepare
+        run: rsync -a deps/${{ matrix.test.type }}/* .
+
+      - name: Run test
+        env:
+          demo: ${{ matrix.test.file }}
+          desc: ${{ matrix.test.desc }}
+        run: docker run -t $imageName ./runTests.sh
 
   build:
     runs-on: ubuntu-latest
@@ -34,7 +75,6 @@ jobs:
     steps:
     - uses: actions/checkout@v4.2.0
     - uses: docker/setup-buildx-action@v3.7.0
-
     - name: Log in to Docker Hub
       if: ${{ env.needToPush }}
       uses: docker/login-action@v3.3.0
