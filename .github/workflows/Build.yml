@@ -41,15 +41,21 @@ jobs:
 
       - uses: actions/cache@v4
         with:
-          path: /var/lib/docker/
-          key: ${{ matrix.test.type }}
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-docker-${{ matrix.test.type }}
+          restore-keys: |
+            ${{ runner.os }}-docker-
         
       - name: Prepare
         working-directory: ./testdemos_files
         run: rsync -a deps/${{ matrix.test.type }}/* .
 
       - name: Build container
-        run: docker build -t $imageName .
+        run: |
+          docker build \
+          --cache-from=type=local,src=/tmp/.buildx-cache \
+          --cache-to=type=local,dest=/tmp/.buildx-cache-new,mode=max \
+          -t $imageName .
 
       - name: Run test
         env:
