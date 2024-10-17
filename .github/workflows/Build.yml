@@ -50,7 +50,7 @@ jobs:
         env:
           demo: ${{ matrix.test.file }}
           desc: ${{ matrix.test.desc }}
-        run: docker run -t $imageName ./runTests.sh
+        run: docker run -t $imageName ./runTest.sh
 
   build:
     runs-on: ubuntu-latest
